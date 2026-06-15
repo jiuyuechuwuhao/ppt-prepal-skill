@@ -108,7 +108,16 @@ for i, slide in enumerate(prs.slides):
 
 ### Step 1: Generate the director script from PPTX
 
-This is the most critical step. The AI agent must analyze each slide in the PPTX file and produce a structured Markdown director script.
+**This is the most critical step — the AI agent writes the oral script.**
+
+The AI agent MUST:
+
+1. Run `extract_pptx_text.py` to get slide content
+2. Read the output carefully — understand the presentation's narrative
+3. For EACH slide, produce:
+   - A descriptive title
+   - A beat-by-beat table with: Beat # | PPT Guide (what to point at) | English Oral (spoken line) | Action (gesture/timing)
+   - A flowing full text (concatenated oral lines, used for TTS)
 
 **First, extract text from the PPTX:**
 
