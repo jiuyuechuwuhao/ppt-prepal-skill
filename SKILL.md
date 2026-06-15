@@ -437,17 +437,15 @@ git checkout -b main
 git add .
 git commit -m "Initial recitation trainer deploy"
 git remote add origin git@github.com:YOUR_USERNAME/YOUR_REPO.git
-git push -u origin main
+GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new" git push -u origin main
 
-# 2. Enable GitHub Pages via gh CLI
-gh repo edit --pages-source-branch main --pages-source-path /
-gh repo view --web  # Open repo, Settings → Pages → Save
+# 2. Enable GitHub Pages via API (gh repo edit does NOT support --pages-source-branch)
+gh api repos/YOUR_USERNAME/YOUR_REPO/pages -X POST -f "source[branch]=main"
+gh api repos/YOUR_USERNAME/YOUR_REPO/pages --jq '.html_url'
 
-# 3. Wait ~1 min for GitHub to build. Check status:
+# 3. Wait for GitHub to build (~1 min), then verify
 gh api repos/YOUR_USERNAME/YOUR_REPO/pages --jq '.status'
 # Expected: "built"
-
-# 4. Public URL: https://YOUR_USERNAME.github.io/YOUR_REPO/recitation_trainer.html
 ```
 
 > ⚠️ **Git Push Issues**: If `git add` fails with "pathspec did not match", use directory globs: `git add audio/ slides/ recitation_trainer.html` instead of `git add .`. This happens when filenames contain CJK characters.
