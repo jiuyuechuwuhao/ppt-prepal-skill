@@ -116,7 +116,9 @@ async def generate_slide_audio(slide_num, text, output_dir, voice, rate):
     print(f"  Slide {slide_num:02d} [{voice_short}]... ({len(text)} chars)", end="", flush=True)
     
     try:
-        communicate = Communicate(text=text, voice=voice, rate=rate)
+                # Ensure rate ends with % (argparse may strip it)
+        rate_str = rate if rate.endswith('%') else rate + '%'
+        communicate = Communicate(text=text, voice=voice, rate=rate_str)
         await communicate.save(output_path)
     except Exception as e:
         error_msg = str(e)
@@ -205,8 +207,8 @@ Examples:
                         help="Edge TTS voice name (default: en-US-EmmaNeural)")
     parser.add_argument("--voices",
                         help="Comma-separated list of voices for multi-voice generation")
-    parser.add_argument("--rate", default="-8%",
-                        help="Speech rate: negative=slower, positive=faster (default: -8%%)")
+    parser.add_argument("--rate", default="-8",
+                        help="Speech rate: negative=slower, positive=faster (default: -8 percent)")
     parser.add_argument("--pause-ms", type=int, default=300,
                         help="Pause between sentences in ms (default: 300)")
     parser.add_argument("--long-pause-ms", type=int, default=600,

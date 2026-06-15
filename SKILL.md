@@ -51,9 +51,15 @@ Run environment check in parallel with input detection:
 
 ```bash
 # 0a. Environment check (always run first)
-SYSTEM_PYTHON=$(which python3 2>/dev/null || which python 2>/dev/null)
-# Verify it's a real system Python (not a broken symlink)
+# Find a working Python 3 with pip. Try common paths in order:
+# 1. /opt/homebrew/bin/python3 (macOS Homebrew)
+# 2. /usr/bin/python3 (macOS system)
+# 3. which python3 (whatever is in PATH)
+for py in /opt/homebrew/bin/python3 /usr/bin/python3 $(which python3 2>/dev/null) python3; do
+    $py --version >/dev/null 2>&1 && { SYSTEM_PYTHON=$py; break; }
+done
 $SYSTEM_PYTHON --version >/dev/null 2>&1 || { echo "ERROR: No working Python found"; exit 1; }
+echo "Using Python: $SYSTEM_PYTHON ($($SYSTEM_PYTHON --version))" 
 $SYSTEM_PYTHON SKILL_DIR/scripts/check_env.py
 ```
 
