@@ -1,4 +1,4 @@
-# 🎙️ PPT PrePal · 英语 Pre 带读训练器
+# 🎙️ PPT PrePal Skills · 英语 Pre 带读训练器
 
 > 一款面向中国博士生的英文 Presentation 带读训练工具。输入 PPT，输出一个带语音跟读、逐句高亮、语速可控的交互式网页。
 
@@ -29,12 +29,12 @@
 - **TTS 语音带读**：微软 Edge TTS 引擎，免费，神经网络音质
 - **逐句高亮**：播放音频时，当前句子高亮 + 自动滚动
 - **全局语速控制**：0.5x ~ 2.0x，适应不同熟练度
-- **手机可用**：部署到 Vercel 后，在任何设备上打开
+- **手机可用**：部署后在任何设备上打开
 - **零依赖部署**：纯静态 HTML，无后端，无数据库
 
 ## 📸 效果预览
 
-![Demo](https://img.shields.io/badge/Live%20Demo-jiuyuechuwuhao.github.io/ufo--presentation-blue)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Click%20to%20view-blue)](https://jiuyuechuwuhao.github.io/ufo-presentation/recitation_trainer.html)
 
 > 实际案例：[Disclosure Day 带读训练器](https://jiuyuechuwuhao.github.io/ufo-presentation/recitation_trainer.html)（21 页学术英文 Pre）
 
@@ -80,7 +80,7 @@ python3 scripts/build_trainer.py \
     --output recitation_trainer.html \
     --compress
 
-# Step 6: （可选）部署到 Vercel
+# Step 6: （可选）部署到 GitHub Pages / Vercel
 # 见 SKILL.md 中的详细步骤
 ```
 
@@ -129,7 +129,7 @@ ppt-prepal/
 | 图片处理 | python-pptx + Pillow | 一键导出一页不落 |
 | PPT 解析 | python-pptx | 提取文字内容 |
 | 前端 | 纯 HTML + CSS + JS | 零框架，零构建 |
-| 部署 | Vercel | 免费，全球 CDN |
+| 部署 | GitHub Pages + Vercel | 免费，全球 CDN，国内可访问 |
 
 ## 🤝 兼容的 AI 智能体
 
