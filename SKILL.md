@@ -26,7 +26,7 @@ Starting from any input (PPTX / PDF / just a topic), this skill:
    - Play/pause button per slide
    - Global speed control (0.5x–2.0x)
    - Keyboard shortcuts (Space, Arrow keys)
-6. **Deploys to GitHub Pages** (optional) — get a public URL accessible on any device
+
 
 ## Prerequisites
 
@@ -36,7 +36,6 @@ The user needs:
 - `pdftoppm` (for PDF→PNG conversion, install via `brew install poppler` on macOS)
 - macOS with Keynote (for PPTX→PDF export)
 - Git and GitHub account (for deployment)
-- `gh` CLI (for GitHub Pages deployment, install via `brew install gh`)
 
 No API keys, no paid services. Everything is free and runs locally.
 
@@ -98,6 +97,25 @@ LOOK at the user's message and any attached/files they mentioned.
 - **Branch C (nothing):** The user MUST create a PPTX. The AI gives them the slide outline from the script, they build slides, then the pipeline continues with `export_slides.py`. DO NOT proceed to Step 2 without the PPTX.
 
 For Branch B, the slide export happens inside Step 2, using `pdftoppm` instead of `export_slides.py` (see Step 2 instructions).
+
+### ⚠️ Shell Safety: Handling user-provided file paths
+
+User file paths may contain spaces, Chinese characters, or special characters (like vertical tabs ``). **Never hardcode a user-provided path in shell commands.** Instead:
+
+1. **Always quote variables**: `"$PDF"`, `"$TEST_DIR"`, never bare `$PDF`
+2. **Use find/ls to locate files** rather than relying on exact path strings:
+   ```bash
+   # Safe: let the shell glob and capture the result
+   PDF=$(ls "$HOME/Downloads/"*王小明*.pdf 2>/dev/null | head -1)
+   ```
+3. **Prefer Python for file operations** when possible. All scripts use `open()` and `Path()` which handle arbitrary Unicode natively.
+4. **If a path contains unusual characters**, copy the file to a safe temp name before processing:
+   ```bash
+   SAFE_PDF="/tmp/input_$(date +%s).pdf"
+   cp "$PDF" "$SAFE_PDF"
+   ```
+
+
 
 #### Legacy: Quick environment summary for the AI agent
 
@@ -370,35 +388,7 @@ recitation-trainer-product/
     └── Slide01.jpg ~ SlideNN.jpg
 ```
 
-### Step 5: (Optional) Deploy to GitHub Pages
-
-```bash
-# Prepare deployment directory (use /tmp to avoid iCloud sync issues)
-mkdir -p ~/tmp/recitation-deploy
-cp -r recitation-trainer-product/* ~/tmp/recitation-deploy/
-cd ~/tmp/recitation-deploy
-
-# Initialize and push
-git init && git checkout -b main
-echo ".DS_Store" > .gitignore
-git add -A
-git commit -m "Initial deploy: English recitation trainer"
-
-# Create repo and push
-# Use the actual output filename from Step 4 (usually recitation_trainer.html)
-OUTPUT_HTML=$(ls *.html | head -1)
-gh repo create USERNAME/REPO-NAME --public --source=. --remote=origin --push
-
-# Enable GitHub Pages
-gh api repos/USERNAME/REPO-NAME/pages -X POST \
-    -f "source[branch]=main" -f "source[path]=/"
-```
-
-**Public URL**: `https://USERNAME.github.io/REPO-NAME/recitation_trainer.html`
-
-Wait ~1-2 minutes for the first build. The page is then accessible on any device (desktop, phone, tablet).
-
-### Step 6: Verify
+### Step 5: Verify
 
 Open the HTML locally to test:
 ```bash
