@@ -1,6 +1,11 @@
 # 🎙️ PPT PrePal Skills · 英语 Pre 带读训练器
 
-> 一款面向中国博士生的英文 Presentation 带读训练工具。输入 PPT，输出一个带语音跟读、逐句高亮、语速可控的交互式网页。
+**A Pocket Trainer for Your Academic Presentations.**
+
+> 💡 **给中国科研工作者的英语 Pre 定心丸。**<br>
+> 一款面向中国博士生与研究人员的英文 Presentation 带读训练工具。输入 PPT，一键生成带有原汁原味语音跟读、逐句高亮、语速可控的交互式网页。让冗长的讲稿化作口袋里的随身私教，通勤路上、等实验的碎片时间随时随地张口就练！
+
+*If this tool helps relieve your presentation anxiety, please consider giving it a ⭐ Star to support the project!*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/jiuyuechuwuhao/ppt-prepal-skills?style=flat-square)](https://github.com/jiuyuechuwuhao/ppt-prepal-skills/stargazers)
@@ -15,23 +20,35 @@
 
 ## 🎯 解决的问题
 
-中国的博士生、研究人员在准备国际学术会议或英文课程 Pre 时，面临三个核心痛点：
+中国的博士生、研究人员在准备国际学术会议、论文答辩或全英课程 Pre 时，往往面临以下核心痛点：
 
-| 痛点 | 传统方式 | 本工具 |
+| 痛点 | 传统方式的局限 | PPT PrePal 的降维打击 |
 |------|----------|--------|
-| **记不住稿子** | 死记硬背，上台卡壳 | 逐拍拆解 + TTS 带读，科学熟记 |
-| **发音不自信** | 自己录音，反复纠错 | 原生英语 TTS，逐句高亮跟读 |
-| **练习不方便** | 电脑前对着 PPT 练 | **手机也能练**——部署网页后随时随地打开 |
+| **🧠 记不住稿子** | 拿着打印纸死记硬背，上台容易卡壳和大脑空白 | **AI 逐拍拆解 + TTS 强制带读**，建立肌肉记忆，科学熟记 |
+| **🗣️ 发音不自信** | 自己对着镜子练，录音反复纠错，费时费力 | **原生英语 TTS 发音**，模拟外场真实语速，逐句高亮跟读 |
+| **⏳ 练习不方便** | 只能正襟危坐在电脑前对着 PPT 一页页练 | **真正的口袋神器**——部署后**手机端随时随地打开**。坐公交、地铁通勤、排队买饭，掏出手机就能无缝练习 |
 
 ## 🚀 核心功能
 
-- **PPT → 带读网页**：输入 PPTX，全自动生成交互式练习页面
-- **逐拍口述表**：每页 PPT 拆解为多个口述节拍，配有动作指引
-- **TTS 语音带读**：微软 Edge TTS 引擎，免费，神经网络音质
-- **逐句高亮**：播放音频时，当前句子高亮 + 自动滚动
-- **全局语速控制**：0.5x ~ 2.0x，适应不同熟练度
-- **手机可用**：部署后在任何设备上打开
-- **零依赖部署**：纯静态 HTML，无后端，无数据库
+- **PPT → 带读网页**：输入 PPTX，全自动生成交互式练习页面。
+- **逐拍口述表**：每页 PPT 拆解为多个口述节拍，配有动作指引。
+- **TTS 语音带读**：微软 Edge TTS 引擎，免费，神经网络音质。
+- **逐句高亮**：播放音频时，当前句子高亮 + 自动滚动。
+- **全局语速控制**：0.5x ~ 2.0x，完美适应从生疏到熟练的每一个阶段。
+- **手机完美适配**：坐公交、等地铁时单手操作无障碍。
+- **零依赖部署**：纯静态 HTML，无后端，无数据库。
+
+### 🔄 工作流图解
+
+```mermaid
+graph LR
+    A[📄 PPTX / 讲稿] -->|AI 解析| B[📝 导演台本 Script]
+    B -->|脚本执行| C[🔊 Edge TTS 生成]
+    B -->|脚本执行| D[🖼️ 幻灯片截图]
+    C --> E((网页组装))
+    D --> E
+    E -->|部署 GitHub Pages| F[📱 手机端口袋教练]
+```
 
 ## 📸 效果预览
 
@@ -151,7 +168,6 @@ ppt-prepal/
 ├── README.md                         # 本文件
 ├── scripts/
 │   ├── check_env.py                  # 🔍 环境检测 + 自动安装依赖
-│   ├── check_env.py                  # 🔍 环境检测 + 自动安装依赖
 │   ├── export_slides.py              # 🖼️ 一键 PPTX → PNG（纯 Python）
 │   ├── extract_pptx_text.py          # 从 PPTX 提取文字内容
 │   ├── generate_tts.py               # Edge TTS 音频生成
@@ -188,3 +204,5 @@ PPT PrePal 采用 Codex Skill 规范（`SKILL.md`），同时提供软链接（`
 ---
 
 **Made with ❤️ for Chinese PhD students preparing for the world stage.**
+
+> 如果这款工具帮您顺利拿下了学术 Pre，别忘了给项目点个 ⭐ **Star** 哦！这能帮助更多科研同路人看到它！
