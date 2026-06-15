@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Director Script Schema",
+  "description": "Format for the AI-generated director script used by the Recitation Trainer",
+  "type": "object",
+  "required": ["slides"],
+  "properties": {
+    "slides": {
+      "type": "array",
+      "description": "One entry per PPT slide, in order",
+      "items": {
+        "type": "object",
+        "required": ["num", "title", "beats", "full_text"],
+        "properties": {
+          "num": {
+            "type": "integer",
+            "description": "Slide number, starting from 1"
+          },
+          "title": {
+            "type": "string",
+            "description": "Slide title as it appears on the slide"
+          },
+          "beats": {
+            "type": "array",
+            "description": "Beat-by-beat oral script. Each beat = one spoken line + one gesture.",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["beat", "ppt_guide", "english"],
+              "properties": {
+                "beat": {
+                  "type": "integer",
+                  "description": "Sequential beat number within this slide"
+                },
+                "ppt_guide": {
+                  "type": "string",
+                  "description": "What to point at on screen (Chinese). E.g., 手指向标题, 手扫过三栏"
+                },
+                "english": {
+                  "type": "string",
+                  "description": "The spoken English line for this beat. Keep sentences short and conversational."
+                },
+                "action": {
+                  "type": "string",
+                  "description": "Optional gesture/timing note (Chinese). E.g., 微笑, 停一拍, 看观众"
+                }
+              }
+            }
+          },
+          "full_text": {
+            "type": "string",
+            "description": "All english lines concatenated into one flowing paragraph. This is the TTS input. Keep it natural — short sentences, conversational tone."
+          }
+        }
+      }
+    }
+  }
+}

@@ -150,23 +150,52 @@ for i, slide in enumerate(prs.slides):
 - **Action column.** Physical gestures and timing notes ("微笑", "看观众", "停一拍").
 - **Flowing full text.** Concatenate all oral lines into one continuous paragraph — this becomes the TTS input.
 
-**Example output format:**
+**CRITICAL OUTPUT FORMAT — the AI agent MUST produce exactly this Markdown structure for every slide:**
 
 ```markdown
-## Slide 1 — COVER
+## Slide N — TITLE
 
 | 拍 | PPT 指引 | 英文口述 | 动作 |
 |---|---|---|---|
-| 1 | 面向观众 | Hi, everyone. | 微笑，停一拍 |
-| 2 | 手指向大标题 | Today — "Disclosure Day." | 单手指屏幕 |
-| 3 | 看观众 | Is it really happening? | |
-| 4 | 转身切页 | Let's find out. | |
+| 1 | (what to point at) | (English spoken line) | (gesture) |
+| 2 | ... | ... | ... |
 
 **连贯全文**：
-> Hi, everyone. Today — "Disclosure Day." Is it really happening? Let's find out.
+> (All english lines concatenated into one natural paragraph)
 ```
 
-Save as `director_script.md` in the working directory.
+**Writing rules the AI MUST follow:**
+
+1. **Simple sentences.** Each beat = one short spoken sentence (5-15 words). No academic jargon.
+2. **Conversational tone.** "Let me show you" not "I will now demonstrate." Use contractions (it's, don't, we're).
+3. **Beat count.** Quick transition slides: 2-4 beats. Content slides: 5-8 beats. Complex slides: 8-12 beats.
+4. **PPT guide column.** What the speaker physically points to. Use Chinese: 手指向标题, 手扫过时间线, 看观众.
+5. **Action column.** Physical cues. Chinese. Can be empty for simple beats.
+6. **Full text = all english lines joined with spaces.** No extra commentary. This becomes the TTS audio input.
+7. **Every slide must have a full_text field.** Even transition slides. If a slide has no oral content, use a simple phrase like "Next, let's look at..."
+8. **Slide titles must match the actual PPT slide content.** Read them from the extract_pptx_text.py output.
+
+**Internal data contract (JSON Schema):**
+
+The director script must parse into this structure (used by build_trainer.py):
+
+```json
+{
+  "slides": [{
+    "num": 1,
+    "title": "COVER",
+    "beats": [{
+      "beat": 1,
+      "ppt_guide": "面向观众",
+      "english": "Hi, everyone.",
+      "action": "微笑，停一拍"
+    }],
+    "full_text": "Hi, everyone. Today — "Disclosure Day." Is it really happening? Let's find out."
+  }]
+}
+```
+
+Save the final script as `director_script.md` in the working directory.
 
 ### Step 2: Export slide screenshots
 
