@@ -185,7 +185,7 @@ def main():
         elif os_info["os"] == "Linux":
             print(f"    Install: {os_info['pkg_install_cmd']} libreoffice-impress")
 
-# gh CLI (for GitHub Pages deployment)
+    # gh CLI (for GitHub Pages deployment)
     has_gh = check_system_tool("gh")
     results["system_tools"]["gh"] = has_gh
     print(f"  {'gh (GitHub CLI)':20s} {'✅' if has_gh else '⚠️  Optional (for deployment)'}")

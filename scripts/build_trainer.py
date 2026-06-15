@@ -45,7 +45,7 @@ def parse_script(script_path):
         in_table = False
         for line in lines:
             stripped = line.strip()
-            if stripped.startswith('| 拍 |'):
+            if stripped.startswith('|') and ('拍' in stripped or 'Beat' in stripped or 'beat' in stripped):
                 in_table = True
                 continue
             if in_table and stripped.startswith('**连贯全文**'):
@@ -70,7 +70,7 @@ def parse_script(script_path):
         # Extract full text
         full_text = ""
         ft = re.search(
-            r'\*\*连贯全文\*\*[^：:]*[：:]\s*\n>?\s*(.+?)(?=\n\n---|\n\n\*\*END|\Z)',
+            r'\*\*(?:连贯全文|Full Text)\*\*[^：:]*[：:]\s*\n>?\s*(.+?)(?=\n\n---|\n\n\*\*END|\Z)',
             raw, re.DOTALL
         )
         if ft:
@@ -108,7 +108,10 @@ def compress_images(slides_dir, max_width=1200):
             print("  No images found to compress.")
         return mapping
 
-    for img_path in sorted(png_files):
+    def _slide_num(path):
+        m = re.search(r'(\d+)', path.stem)
+        return int(m.group(1)) if m else 0
+    for img_path in sorted(png_files, key=_slide_num):
             try:
                 img = Image.open(img_path)
                 if img.mode == 'RGBA':
@@ -184,7 +187,7 @@ def detect_audio_pattern(audio_dir):
     return None
 
 
-def build_html(slides, slides_dir, audio_dir, output_path, template_path=None):
+def build_html(slides, slides_dir, audio_dir, output_path, title=None, template_path=None):
     """Generate the trainer HTML."""
     slides_json = json.dumps(slides, ensure_ascii=False)
     img_ext = detect_image_ext(slides_dir)
@@ -204,7 +207,12 @@ def build_html(slides, slides_dir, audio_dir, output_path, template_path=None):
             raise FileNotFoundError("trainer_template.html not found in assets/")
 
     # Replace the title
-    page_title = f"{slides[0]['title']} — 带读背诵训练" if slides else "Recitation Trainer — 带读背诵训练"
+    if title:
+        page_title = title
+    elif slides:
+        page_title = f"{slides[0]['title']} — 带读背诵训练"
+    else:
+        page_title = "Recitation Trainer — 带读背诵训练"
     html = html.replace("{{TITLE}}", page_title)
 
     # Replace the SLIDES data
@@ -270,7 +278,7 @@ def main():
 
     # Step 3: Build HTML
     print("\n[3/4] Building HTML...")
-    build_html(slides, args.slides, args.audio, args.output, args.template)
+    build_html(slides, args.slides, args.audio, args.output, args.title, args.template)
 
     # Step 4: Summary
     print("\n[4/4] Done!")

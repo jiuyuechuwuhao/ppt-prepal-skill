@@ -19,7 +19,7 @@ Starting from any input (PPTX / PDF / just a topic), this skill:
 3. **Generates TTS audio** — use free Edge TTS to narrate each slide's full text as MP3
 4. **Compresses images** — optimize PNG to JPEG for fast mobile loading
 5. **Builds the trainer HTML** — a self-contained, dark-themed web app with:
-   - 21+ collapsible panels (one per slide)
+   - Collapsible panels (one per slide)
    - PPT slide preview images
    - Beat-by-beat oral script table (4 columns: beat #, PPT guide, English, action)
    - Flowing full text with per-sentence highlighting synced to audio
@@ -51,7 +51,9 @@ Run environment check in parallel with input detection:
 
 ```bash
 # 0a. Environment check (always run first)
-SYSTEM_PYTHON=$(/usr/bin/python3 -c "print('ok')" 2>/dev/null && echo "/usr/bin/python3" || which python3)
+SYSTEM_PYTHON=$(which python3 2>/dev/null || which python 2>/dev/null)
+# Verify it's a real system Python (not a broken symlink)
+$SYSTEM_PYTHON --version >/dev/null 2>&1 || { echo "ERROR: No working Python found"; exit 1; }
 $SYSTEM_PYTHON SKILL_DIR/scripts/check_env.py
 ```
 
@@ -65,7 +67,15 @@ The AI agent scans the user's files and classifies the starting state into exact
 |--------|-------------------|---------------------|
 | **A: Full PPTX** | A .pptx file with slides already designed | Go to Step 1A (extract text → generate script) |
 | **B: PDF only** | A .pdf (paper/article) | Go to Step 1B (extract text → generate script → `pdftoppm` exports slide images directly from PDF) |
-| **C: Nothing** | Just a topic or a vague idea | Go to Step 1C (AI designs slide outline → generates script → guides user to create PPTX, then proceeds) |
+| **C: Nothing** | Just a topic or a vague idea | Go to Step 1C (AI designs slide outline → generates script → guides user to create slides) |
+
+**Branch C user guidance template:**
+
+> "I've designed an X-slide presentation outline and director script. Now create your slides:
+> 1. Open WPS/PowerPoint/Keynote
+> 2. Create X slides matching the titles in the script
+> 3. Content on each slide should match the beat-by-beat notes
+> 4. Save as `.pptx` and give me the path — I'll auto-export images and build the trainer." 
 
 **How the agent decides:**
 
@@ -369,6 +379,8 @@ git add -A
 git commit -m "Initial deploy: English recitation trainer"
 
 # Create repo and push
+# Use the actual output filename from Step 4 (usually recitation_trainer.html)
+OUTPUT_HTML=$(ls *.html | head -1)
 gh repo create USERNAME/REPO-NAME --public --source=. --remote=origin --push
 
 # Enable GitHub Pages

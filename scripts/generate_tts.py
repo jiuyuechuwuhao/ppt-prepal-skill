@@ -67,7 +67,7 @@ def parse_full_texts(script_path):
 
         full_text = ""
         ft = re.search(
-            r'\*\*连贯全文\*\*[^：:]*[：:]\s*\n>?\s*(.+?)(?=\n\n---|\n\n\*\*END|\Z)',
+            r'\*\*(?:连贯全文|Full Text)\*\*[^：:]*[：:]\s*\n>?\s*(.+?)(?=\n\n---|\n\n\*\*END|\Z)',
             raw, re.DOTALL
         )
         if ft:
